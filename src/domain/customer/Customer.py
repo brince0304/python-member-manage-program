@@ -13,7 +13,7 @@ class Customer:
         self.__customer_spent_money: int = customer_spent_money
 
     def __str__(self):
-        return f"고객 고유 번호: {self.__customer_serial_id} 고객 아이디: {self.__customer_id} 고객 이름: {self.__customer_nae} 이용 금액: {self.__customer_spent_money}만원 이용 시간: {self.__customer_spent_hour}시간"
+        return f"고객 고유 번호: {self.__customer_serial_id} 고객 아이디: {self.__customer_id} 고객 이름: {self.__customer_name} 이용 금액: {self.__customer_spent_money}만원 이용 시간: {self.__customer_spent_hour}시간"
 
     def __eq__(self, other):
         if isinstance(other, Customer):
