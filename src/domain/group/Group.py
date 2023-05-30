@@ -8,7 +8,7 @@ class Group :
         self.__parameter: Parameter = parameter
 
     def __str__(self):
-        return f"그룹 타입: {self.__group_type} 이용 금액, 이용 시간: {self.__parameter}"
+        return f"그룹 타입: {self.__group_type}, {self.__parameter}"
 
     def __eq__(self, other):
         if not isinstance(self, other):

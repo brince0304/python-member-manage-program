@@ -1,4 +1,5 @@
 import re
+import string
 
 import openpyxl.utils.exceptions
 from openpyxl.reader.excel import load_workbook
@@ -14,6 +15,7 @@ class Validator:
     customer_id_already_exist = "이미 존재하는 고객 아이디입니다."
     regex_explain_id = "알파벳 / 숫자 / _ 가능, 5~12자, 첫글자는 영문자 혹은 숫자, 중복 금지"
     regex_explain_name = "영문자, 3자 이상"
+    col_list = list()
 
     @staticmethod
     def validate_customer_id(customer_id):
@@ -33,6 +35,7 @@ class Validator:
     def validate_is_go_back_menu(input_menu):
         if input_menu == "0" or input_menu == 0:
             print(Validator.go_back_menu)
+            Validator.clear_row_list()
             return True
         else:
             return False
@@ -64,26 +67,45 @@ class Validator:
             return False
 
     @staticmethod
-    def validate_row(sheet, row):
-        if sheet[row] is None:
+    def validate_cell(sheet, row, col):
+        try:
+            if col in Validator.col_list:
+                return False
+            if sheet.cell(row=row, column=Validator.validate_convert_col_to_int(col)).value is None:
+                return False
+            else:
+                return True
+        except IndexError:
+            return False
+        except TypeError:
+            return False
+
+    @staticmethod
+    def clear_row_list():
+        Validator.col_list.clear()
+
+    @staticmethod
+    def validate_col(sheet, customer_start_row, customer_id_col, customer_name_col, customer_spent_money_col,
+                     customer_spent_hour_col):
+        if sheet.cell(row=customer_start_row, column=customer_id_col).value is None or \
+                sheet.cell(row=customer_start_row, column=customer_name_col).value is None or \
+                sheet.cell(row=customer_start_row, column=customer_spent_money_col).value is None or \
+                sheet.cell(row=customer_start_row, column=customer_spent_hour_col).value is None:
             return False
         else:
             return True
 
     @staticmethod
-    def validate_col(sheet, customer_start_col, customer_id_row, customer_name_row, customer_spent_money_row, customer_spent_hour_row):
-        if sheet.cell(row=customer_start_col, column=customer_id_row).value is None or \
-                sheet.cell(row=customer_start_col, column=customer_name_row).value is None or \
-                sheet.cell(row=customer_start_col, column=customer_spent_money_row).value is None or \
-                sheet.cell(row=customer_start_col, column=customer_spent_hour_row).value is None:
-            return False
-        else:
-            return True
+    def validate_convert_col_to_int(col: str):
+        try:
+            return ord(col) - 64 if col.isupper() else ord(col) - 96
+        except TypeError:
+            return col
 
     @staticmethod
-    def validate_convert_row_to_int(row: str):
-        return ord(row) - 64 if row.isupper() else ord(row) - 96
-
-    @staticmethod
-    def validate_convert_row_to_char(col: str):
+    def validate_convert_col_to_char(col: str):
         return chr(col + 64) if col <= 26 else chr(col + 70)
+
+    @staticmethod
+    def add_to_col_list(row):
+        Validator.col_list.append(row)

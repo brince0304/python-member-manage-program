@@ -16,6 +16,10 @@ class Parameter:
     def __hash__(self):
         return hash((self.spent_money, self.spent_hour))
 
+    @staticmethod
+    def of(spent_money: int, spent_hour: int):
+        return Parameter(spent_money, spent_hour)
+
     @property
     def spent_money(self) -> int:
         return self.__spent_money

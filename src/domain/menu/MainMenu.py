@@ -1,3 +1,4 @@
+from src.domain.menu.GroupMenu import GroupMenu
 from src.domain.menu.Menu import Menu
 from src.util.Validator import Validator
 
@@ -5,20 +6,22 @@ from src.util.Validator import Validator
 class MainMenu(Menu):
     _instance = None
     __customer_menu: Menu
+    __group_menu: Menu
 
     def __new__(cls, *args, **kwargs):
         if MainMenu._instance is None:
             MainMenu._instance = super().__new__(cls)
             return MainMenu._instance
 
-    def __init__(self, customer_menu: Menu):
+    def __init__(self, customer_menu: Menu, group_menu: Menu):
         self.__customer_menu = customer_menu
+        self.__group_menu = group_menu
 
     @staticmethod
     def get_instance():
         if MainMenu._instance is None:
             from src.domain.menu.CustomerMenu import CustomerMenu
-            MainMenu._instance = MainMenu(CustomerMenu.get_instance())
+            MainMenu._instance = MainMenu(CustomerMenu.get_instance(), GroupMenu.get_instance())
             return MainMenu._instance
         else:
             return MainMenu._instance
@@ -35,6 +38,9 @@ class MainMenu(Menu):
     def select_menu(self, menu_input: int):
         if menu_input == 1:
             self.__customer_menu.print_menu()
+        elif menu_input == 2:
+            self.__group_menu.print_menu()
+
 
 
 
