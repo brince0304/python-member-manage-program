@@ -2,6 +2,9 @@ from typing import List
 from typing import Set
 
 from src.domain.customer.Customer import Customer
+from src.domain.group.Group import Group
+from src.domain.group.GroupType import GroupType
+from src.domain.group.Parameter import Parameter
 
 
 class Customers:
@@ -53,8 +56,12 @@ class Customers:
     def get_size(self) -> int:
         return len(self.__customers)
 
-    def get_customer_by_index(self, index: int) -> Customer:
-        return self.__customers[index]
+    def get_customers_by_group_type(self, group_type: GroupType) -> List[Customer]:
+        customers: List[Customer] = list()
+        for customer in self.__customers:
+            if customer.group.group_type == group_type:
+                customers.append(customer)
+        return customers
 
     @staticmethod
     def get_instance():
@@ -63,3 +70,6 @@ class Customers:
             return Customers._instance
         else:
             return Customers._instance
+
+    def get_customers(self):
+        return self.__customers

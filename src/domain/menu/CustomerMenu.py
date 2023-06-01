@@ -283,11 +283,9 @@ class CustomerMenu(Menu):
             print("고객 명단이 비어있습니다.")
             return
         print("고객 명단을 출력합니다.")
-        for i in range(self.__customer_service.get_size()):
-            customer = self.__customer_service.get_customer_by_index(i)
-            print(
-                f"고유 번호 : {customer.customer_serial_id} 고객 ID: {customer.customer_id}, 고객 이름: {customer.customer_name}, 고객 이용 금액: {customer.customer_spent_money}, 고객 이용 시간: {customer.customer_spent_hour}")
-        print("고객 명단 출력을 완료하였습니다.")
+        customers = self.__customer_service.get_customers()
+        for customer in customers:
+            print(customer)
 
     def delete_customer_select(self):
         print("1. 고객 명단 직접 삭제")

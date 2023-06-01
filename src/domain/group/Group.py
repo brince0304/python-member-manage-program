@@ -2,7 +2,7 @@ from src.domain.group.GroupType import GroupType
 from src.domain.group.Parameter import Parameter
 
 
-class Group :
+class Group:
     def __init__(self, group_type: GroupType, parameter: Parameter):
         self.__group_type: GroupType = group_type
         self.__parameter: Parameter = parameter
@@ -19,6 +19,10 @@ class Group :
 
     def __hash__(self):
         return hash((self.__group_type, self.__parameter))
+
+    @staticmethod
+    def of(group_type: GroupType, parameter: Parameter):
+        return Group(group_type, parameter)
 
     @property
     def group_type(self) -> GroupType:

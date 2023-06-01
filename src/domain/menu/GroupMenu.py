@@ -1,3 +1,9 @@
+from typing import List
+
+from src.domain.customer.ClassifiedCustomers import ClassifiedCustomers
+from src.domain.customer.Customer import Customer
+from src.domain.customer.Customers import Customers
+from src.domain.group.Group import Group
 from src.domain.group.GroupType import GroupType
 from src.domain.group.Groups import Groups
 from src.domain.group.Parameter import Parameter
@@ -7,19 +13,23 @@ from src.domain.menu.Menu import Menu
 class GroupMenu(Menu):
     _instance = None
     __group_service: Groups
+    __customer_service: Customers
+    __classified_customer_service: ClassifiedCustomers
 
     def __new__(cls, *args, **kwargs):
         if GroupMenu._instance is None:
             GroupMenu._instance = super().__new__(cls)
             return GroupMenu._instance
 
-    def __init__(self, group_service: Groups):
+    def __init__(self, group_service: Groups, customer_service: Customers, classified_customer_service: ClassifiedCustomers):
         self.__group_service = group_service
+        self.__customer_service = customer_service
+        self.__classified_customer_service = classified_customer_service
 
     @staticmethod
     def get_instance():
         if GroupMenu._instance is None:
-            GroupMenu._instance = GroupMenu(Groups.get_instance())
+            GroupMenu._instance = GroupMenu(Groups.get_instance(), Customers.get_instance(), ClassifiedCustomers.get_instance())
             return GroupMenu._instance
         else:
             return GroupMenu._instance
@@ -64,6 +74,7 @@ class GroupMenu(Menu):
             return
         else:
             self.init_group_parameter_from_lowest_type()
+            self.update_customers_group()
 
     def init_group_parameter_from_lowest_type(self):
         mode = True
@@ -187,6 +198,7 @@ class GroupMenu(Menu):
                     elif group_type == 3:
                         group_type = GroupType.VVIP
                     self.update_group_parameter(group_type)
+                    self.update_customers_group()
                     print("그룹 기준이 수정되었습니다.")
                     break
             except ValueError:
@@ -206,7 +218,7 @@ class GroupMenu(Menu):
                 if spent_money < 1:
                     return
                 if self.check_available_group_parameter(group_type, spent_money, spent_hour):
-                    group.parameter = Parameter(spent_money, spent_hour)
+                    group.parameter = Parameter.of(spent_money, spent_hour)
                     self.__group_service.set_group_parameter_by_group_type(group_type, group.parameter)
                     break
                 else:
@@ -215,3 +227,26 @@ class GroupMenu(Menu):
             except ValueError:
                 print("숫자를 입력해주세요.")
                 continue
+
+    def clear_customers_group(self):
+        for customer in self.__customer_service.get_customers():
+            customer.group = Group.of(GroupType.NONE,Parameter.of(0, 0))
+            self.__customer_service.edit_customer_by_customer_serial_id(customer.customer_serial_id, customer)
+
+    def update_customers_group(self):
+        self.clear_customers_group()
+        groups = self.__group_service.get_all_groups()
+        customers = self.__customer_service.get_customers()
+        for group in reversed(groups):
+            if group.group_type == GroupType.NONE:
+                continue
+            for customer in customers:
+                if customer.group.group_type != GroupType.NONE:
+                    continue
+                hour_standard = group.parameter.spent_hour
+                money_standard = group.parameter.spent_money
+                customer_hour = customer.customer_spent_hour
+                customer_money = customer.customer_spent_money
+                if customer_hour >= hour_standard and customer_money >= money_standard:
+                    customer.group = Group.of(group.group_type, group.parameter)
+                    self.__customer_service.edit_customer_by_customer_serial_id(customer.customer_serial_id, customer)
