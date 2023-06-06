@@ -19,6 +19,17 @@ class Customers:
     def __init__(self):
         self.__customers: List[Customer] = list()
 
+    @staticmethod
+    def get_instance():
+        if not Customers._instance:
+            Customers._instance = Customers()
+            return Customers._instance
+        else:
+            return Customers._instance
+
+    def get_customers(self):
+        return self.__customers
+
     def add_customer(self, customer: Customer):
         self.__customers.append(customer)
 
@@ -63,13 +74,3 @@ class Customers:
                 customers.append(customer)
         return customers
 
-    @staticmethod
-    def get_instance():
-        if not Customers._instance:
-            Customers._instance = Customers()
-            return Customers._instance
-        else:
-            return Customers._instance
-
-    def get_customers(self):
-        return self.__customers
