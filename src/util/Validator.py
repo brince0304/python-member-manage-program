@@ -6,8 +6,8 @@ from openpyxl.reader.excel import load_workbook
 
 
 class Validator:
+    regex_customer_id = re.compile("^[a-zA-Z][a-zA-Z0-9_]{4,11}$")
     regex_customer_name = re.compile("^[a-zA-Z]{3,}$")
-    regex_customer_id = re.compile("/^[a-zA-Z][a-zA-Z0-9_]{4,11}$/")
     customer_name_not_valid = "고객 이름이 유효하지 않습니다."
     customer_id_not_valid = "고객 아이디가 유효하지 않습니다."
     go_back_menu = "이전 메뉴로 돌아갑니다."

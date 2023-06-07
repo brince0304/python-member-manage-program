@@ -230,7 +230,7 @@ class GroupMenu(Menu):
 
     def clear_customers_group(self):
         for customer in self.__customer_service.get_customers():
-            customer.group = Group.of(GroupType.NONE,Parameter.of(0, 0))
+            customer.group = Group.of(GroupType.NONE, Parameter.of(0, 0))
             self.__customer_service.edit_customer_by_customer_serial_id(customer.customer_serial_id, customer)
 
     def update_customers_group(self):

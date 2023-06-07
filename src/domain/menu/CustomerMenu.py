@@ -302,8 +302,10 @@ class CustomerMenu(Menu):
                 elif num == 2:
                     self.delete_prev_add_customer_xl_select()
                     break
+                elif num == 3:
+                    return
                 else:
-                    print("잘못된 입력입니다.")
+                    print("1 ~ 3 사이의 숫자를 입력해주세요.")
             except ValueError:
                 print("숫자만 입력해주세요.")
 
