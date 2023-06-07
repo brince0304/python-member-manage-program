@@ -15,7 +15,10 @@ class Groups:
             return Groups._instance
 
     def __init__(self):
-        self.__groups: List[Group] = [Group(GroupType.NONE, Parameter.of(0, 0)), Group(GroupType.GENERAL, Parameter.of(0,0)), Group(GroupType.VIP, Parameter.of(0,0)), Group(GroupType.VVIP, Parameter.of(0,0))]
+        self.__groups: List[Group] = [Group(GroupType.NONE, Parameter.of(0, 0)),
+                                      Group(GroupType.GENERAL, Parameter.of(0,0)),
+                                      Group(GroupType.VIP, Parameter.of(0,0)),
+                                      Group(GroupType.VVIP, Parameter.of(0,0))]
 
     @staticmethod
     def get_instance():
